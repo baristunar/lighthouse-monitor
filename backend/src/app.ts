@@ -1,12 +1,14 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import metricsRouter from './modules/metrics/metrics.controller'
-import domainRouter from "./modules/domains/domain.controller";
+import morgan from "morgan";
+import metricsRouter from './modules/metrics/metrics.controller.js';
+import domainRouter from "./modules/domains/domain.controller.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
 app.use("/api/v1/domains", domainRouter);
 app.use("/api/v1/metrics", metricsRouter);
