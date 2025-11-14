@@ -12,16 +12,18 @@ Full-stack web performance monitoring application that automatically tracks webs
 ### 🎯 Core Functionality
 - **Automated Testing**: Lighthouse tests run every 3 hours automatically
 - **Manual Testing**: Trigger on-demand performance tests
-- **Multiple Domains**: Monitor unlimited websites
-- **Historical Data**: Track performance trends over time
+- **Multiple Domains**: Monitor up to 10 websites (configurable limit)
+- **Historical Data**: Track performance trends over time (90-day retention)
 - **Visual Analytics**: Interactive charts for performance metrics
+- **Auto Cleanup**: Automatically removes metrics older than 90 days
 
 ### 📊 Metrics & Insights
 - **Performance Score**: Overall Lighthouse score (0-100)
 - **Core Web Vitals**: LCP, FCP, CLS, TBT
 - **Opportunities**: Top 5 recommendations to improve performance
-- **Diagnostics**: Technical issues affecting site performance
+- **Diagnostics**: Top 5 technical issues affecting site performance
 - **Trend Analysis**: Performance changes over time
+- **Mobile Testing**: Tests run with mobile device emulation (Moto G4, 4G network)
 
 ### 🎨 User Experience
 - Modern, responsive dark theme UI
@@ -149,16 +151,48 @@ The application will be available at:
 
 ### Backend Environment Variables
 ```env
-PORT=4500                           # API server port
-MONGO_URI=mongodb+srv://...        # MongoDB connection string
+NODE_ENV=production              # Environment mode
+MONGO_URI=mongodb+srv://...      # MongoDB connection string
+FRONTEND_URL=https://...         # Frontend URL for CORS
 ```
 
-### Frontend Environment Variables (optional)
-```env
-VITE_API_URL=http://localhost:4500  # Backend API URL
-```
+### Limits & Retention
+- **Domain Limit**: 10 domains maximum (configurable in `domain.controller.ts`)
+- **Metrics Retention**: 90 days (configurable in `lighthouse.cron.ts`)
+- **Test Frequency**: Every 3 hours (cron schedule)
+- **Mobile Testing**: Default Lighthouse configuration (mobile emulation)
 
-## 🔧 Development
+## 🚀 Deployment
+
+### Live Demo
+- **Frontend**: [https://lighthouse-monitor.vercel.app](https://lighthouse-monitor.vercel.app)
+- **Backend API**: [https://lighthouse-monitor.onrender.com](https://lighthouse-monitor.onrender.com)
+
+### Quick Deploy
+
+**Frontend (Vercel)**:
+1. Fork this repository
+2. Import to Vercel
+3. Deploy automatically
+
+**Backend (Render)**:
+1. Create new Web Service
+2. Connect GitHub repository
+3. Set environment variables:
+   - `NODE_ENV=production`
+   - `MONGO_URI=<your-mongodb-uri>`
+   - `FRONTEND_URL=<your-vercel-url>`
+4. Deploy
+
+**Database (MongoDB Atlas)**:
+1. Create free cluster (512MB)
+2. Add database user
+3. Whitelist all IPs (0.0.0.0/0)
+4. Copy connection string
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+## 🔒 Free Tier Limits
 
 ### Backend
 ```bash
