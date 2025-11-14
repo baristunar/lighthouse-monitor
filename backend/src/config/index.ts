@@ -1,10 +1,8 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const CONFIG = {
+export const CONFIG = {
   PORT: process.env.PORT || 4500,
   MONGO_URI: process.env.MONGO_URI || "",
 };
-
-module.exports = { CONFIG };

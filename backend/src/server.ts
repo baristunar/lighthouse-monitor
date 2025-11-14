@@ -1,6 +1,6 @@
-const app = require("./app");
-const connectDB = require("./database/db");
-const { CONFIG } = require("./config/index");
+import app from "./app.js";
+import connectDB from "./database/db.js";
+import { CONFIG } from "./config/index.js";
 
 connectDB().then(() => {
   app.listen(CONFIG.PORT, () => {
@@ -8,5 +8,3 @@ connectDB().then(() => {
     console.log('Press Ctrl+C to stop the server');
   });
 });
-
-export {};

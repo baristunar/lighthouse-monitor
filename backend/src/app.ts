@@ -1,11 +1,17 @@
-const express = require("express");
-const cors = require("cors");
+import express, { Request, Response } from "express";
+import cors from "cors";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-module.exports = app;
+app.get("/health", (req: Request, res: Response) => {
+    res.status(200).send("OK");
+});
 
-export {};
+app.get("/", (req: Request, res: Response) => {
+    res.send("API is running");
+});
+
+export default app;
