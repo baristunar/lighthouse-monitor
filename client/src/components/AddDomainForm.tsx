@@ -40,7 +40,8 @@ export default function AddDomainForm({ onDomainAdded }: AddDomainFormProps) {
       await loadDomains();
       onDomainAdded();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to add domain');
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Failed to add domain';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
