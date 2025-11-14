@@ -46,10 +46,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (needed for build)
-RUN npm ci
+# Install all dependencies
+RUN npm ci && npm cache clean --force
 
-# Install lighthouse globally to avoid npx issues
+# Install lighthouse globally
 RUN npm install -g lighthouse
 
 # Copy app source
@@ -57,9 +57,6 @@ COPY . .
 
 # Build TypeScript
 RUN npm run build
-
-# Clean node_modules and reinstall only production dependencies
-RUN rm -rf node_modules && npm ci --omit=dev && npm cache clean --force
 
 # Run as non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
