@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { Domain, Metric } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4500/api/v1';
+// Use /api for production (proxied via vercel.json) or localhost for dev
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
