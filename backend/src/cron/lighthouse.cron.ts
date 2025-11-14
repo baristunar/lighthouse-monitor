@@ -2,18 +2,40 @@ import cron from "node-cron";
 import { DomainRepository } from "../modules/domains/domain.repository.js";
 import { MetricsService } from "../modules/metrics/metrics.service.js";
 
-export  const startCron = () => {
+export const startCron = () => {
   const domainRepo = new DomainRepository();
   const metricsService = new MetricsService();
 
+  // Run every 3 hours: 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00
   cron.schedule("0 */3 * * *", async () => {
-    console.log("⏱ Running Lighthouse checks...");
+    console.log("⏱️ Running Lighthouse checks...");
 
-    const domains = await domainRepo.getAll();
-    
-    for (const d of domains) {
-      const metrics = await metricsService.runOnce(d.url);
-      console.log(`✔ ${d.url} updated`);
+    try {
+      const domains = await domainRepo.getAll();
+
+      if (domains.length === 0) {
+        console.log("📭 No domains to check");
+        return;
+      }
+
+      console.log(`📊 Found ${domains.length} domain(s) to check`);
+
+      for (const d of domains) {
+        try {
+          console.log(`🔍 Checking: ${d.url}`);
+          const metrics = await metricsService.runOnce(d.url) as any;
+          
+          console.log(`✅ ${d.url} - Performance: ${metrics.performance}/100`);
+        } catch (error) {
+          console.error(`❌ Error checking ${d.url}:`, error);
+        }
+      }
+
+      console.log("✨ Lighthouse checks completed");
+    } catch (error) {
+      console.error("❌ Cron job error:", error);
     }
   });
-}
+
+  console.log("🕐 Cron job started: Running every 3 hours");
+};
