@@ -18,10 +18,30 @@ domainRouter.post("/", async (req: Request, res: Response) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ error: "URL is required" });
   }
 
+  try {
+    const urlObj = new URL(url);
+    if (!urlObj.protocol.startsWith('http')) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ 
+        error: "Invalid URL. Must start with http:// or https://" 
+      });
+    }
+  } catch (err) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ 
+      error: "Invalid URL format. Please enter a valid URL (e.g., https://example.com)" 
+    });
+  }
+
   const domainCount = await service.count();
   if (domainCount >= 10) {
     return res.status(StatusCodes.BAD_REQUEST).json({ 
       error: "Maximum 10 domains allowed. Please delete a domain to add a new one." 
+    });
+  }
+
+  const existing = await service.findByUrl(url);
+  if (existing) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ 
+      error: "This domain is already being monitored." 
     });
   }
 

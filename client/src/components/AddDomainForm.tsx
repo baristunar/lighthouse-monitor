@@ -32,6 +32,18 @@ export default function AddDomainForm({ onDomainAdded }: AddDomainFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    try {
+      const urlObj = new URL(url);
+      if (!urlObj.protocol.startsWith('http')) {
+        setError('Invalid URL. Must start with http:// or https://');
+        return;
+      }
+    } catch (err) {
+      setError('Invalid URL format. Please enter a valid URL (e.g., https://example.com)');
+      return;
+    }
+
     setLoading(true);
 
     try {
