@@ -60,7 +60,7 @@ export default function MetricsView() {
   const latestMetric = metrics[0];
 
   const domainOptions = domains.map(d => ({
-    value: d.url,
+    value: d._id,
     label: d.url
   }));
 
