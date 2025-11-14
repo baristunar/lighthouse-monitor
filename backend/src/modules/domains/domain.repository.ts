@@ -1,5 +1,5 @@
-import { DomainModel } from "./domain.model";
-import { Url } from "./domain.types";
+import { DomainModel } from "./domain.model.js";
+import { Url } from "./domain.types.js";
 
 export class DomainRepository {
   async getAll() {

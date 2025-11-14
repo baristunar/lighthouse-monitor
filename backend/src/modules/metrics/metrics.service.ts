@@ -1,6 +1,6 @@
-import { MetricsRepository } from "./metrics.repository";
-import { runLighthouse } from "../../lighthouse/lighthouse.service";
-import { Domain, MetricsData } from "./metrics.types";
+import { MetricsRepository } from "./metrics.repository.js";
+import { runLighthouse } from "../../lighthouse/lighthouse.service.js";
+import { Domain, MetricsData } from "./metrics.types.js";
 
 export class MetricsService {
   constructor(private repo = new MetricsRepository()) {}

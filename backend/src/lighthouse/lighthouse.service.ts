@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
-import { Url } from "./lighthouse.types";
+import { Url } from "./lighthouse.types.js";
 
 export const runLighthouse = async (url: Url) => {
   const outputFile = path.join(process.cwd(), `lh-report-${Date.now()}.json`);

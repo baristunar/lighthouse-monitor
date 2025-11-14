@@ -1,5 +1,5 @@
-import { MetricsModel } from "./metrics.model";
-import { MetricsData, Domain } from "./metrics.types";
+import { MetricsModel } from "./metrics.model.js";
+import { MetricsData, Domain } from "./metrics.types.js";
 
 export class MetricsRepository {
   async saveMetrics(data: MetricsData) {

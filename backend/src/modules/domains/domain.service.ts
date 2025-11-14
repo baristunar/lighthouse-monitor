@@ -1,5 +1,5 @@
 import { DomainRepository } from "./domain.repository.js";
-import { Url } from "./domain.types";
+import { Url } from "./domain.types.js";
 
 export class DomainService {
   constructor(private repo = new DomainRepository()) {}
