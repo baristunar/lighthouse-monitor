@@ -1,10 +1,12 @@
 import cron from "node-cron";
 import { DomainRepository } from "../modules/domains/domain.repository.js";
 import { MetricsService } from "../modules/metrics/metrics.service.js";
+import { MetricsRepository } from "../modules/metrics/metrics.repository.js";
 
 export const startCron = () => {
   const domainRepo = new DomainRepository();
   const metricsService = new MetricsService();
+  const metricsRepo = new MetricsRepository();
 
   // Run every 3 hours: 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00
   cron.schedule("0 */3 * * *", async () => {
@@ -29,6 +31,11 @@ export const startCron = () => {
         } catch (error) {
           console.error(`❌ Error checking ${d.url}:`, error);
         }
+      }
+
+      const deletedCount = await metricsRepo.deleteOldMetrics(90);
+      if (deletedCount > 0) {
+        console.log(`🗑️ Cleaned up ${deletedCount} old metric(s)`);
       }
 
       console.log("✨ Lighthouse checks completed");

@@ -18,6 +18,13 @@ domainRouter.post("/", async (req: Request, res: Response) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ error: "URL is required" });
   }
 
+  const domainCount = await service.count();
+  if (domainCount >= 10) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ 
+      error: "Maximum 10 domains allowed. Please delete a domain to add a new one." 
+    });
+  }
+
   await service.create(url);
   
   res.status(StatusCodes.CREATED).json({ message: "Domain added",

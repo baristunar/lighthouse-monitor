@@ -6,6 +6,10 @@ export class DomainRepository {
     return DomainModel.find().sort({ _id: -1 });
   }
 
+  async count() {
+    return DomainModel.countDocuments();
+  }
+
   async create(url: Url) {
     const domain = new DomainModel({ url });
     

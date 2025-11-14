@@ -2,17 +2,21 @@ import { DomainRepository } from "./domain.repository.js";
 import { Url } from "./domain.types.js";
 
 export class DomainService {
-  constructor(private repo = new DomainRepository()) {}
+  private repository = new DomainRepository();
 
-  getAll() {
-    return this.repo.getAll();
+  async getAll() {
+    return this.repository.getAll();
   }
 
-  create(url: Url) {
-    return this.repo.create(url);
+  async count() {
+    return this.repository.count();
   }
 
-  findByUrl(url: Url) {
-    return this.repo.findByUrl(url);
+  async create(url: Url) {
+    return this.repository.create(url);
+  }
+
+  async findByUrl(url: Url) {
+    return this.repository.findByUrl(url);
   }
 }
