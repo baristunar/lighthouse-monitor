@@ -33,41 +33,36 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Chromium environment variables
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROME_PATH=/usr/bin/chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-ENV NODE_ENV=production
+# Set environment variables
+ENV CHROME_BIN=/usr/bin/chromium \
+    CHROME_PATH=/usr/bin/chromium \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    NODE_ENV=production
 
-# Create app directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies
-RUN npm ci && npm cache clean --force
+# Install dependencies and lighthouse
+RUN npm ci && \
+    npm install -g lighthouse && \
+    npm cache clean --force
 
-# Install lighthouse globally
-RUN npm install -g lighthouse
-
-# Copy app source
+# Copy source code
 COPY . .
 
-# Build TypeScript
+# Build application
 RUN npm run build
 
-# Run as non-root user for security
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 --home /home/nodejs nodejs && \
-    mkdir -p /home/nodejs && \
     chown -R nodejs:nodejs /app /home/nodejs
-
-# Expose port
-EXPOSE 4500
 
 USER nodejs
 
-# Start app
+EXPOSE 4500
+
 CMD ["node", "dist/server.js"]
