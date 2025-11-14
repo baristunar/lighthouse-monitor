@@ -55,18 +55,18 @@ RUN npm install -g lighthouse
 # Copy app source
 COPY . .
 
-# Build TypeScript
+# Build TypeScript and prune dev dependencies
 RUN npm run build && \
-    npm prune --production
-
-# Expose port
-EXPOSE 4500
+    npm prune --omit=dev
 
 # Run as non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 --home /home/nodejs nodejs && \
     mkdir -p /home/nodejs && \
     chown -R nodejs:nodejs /app /home/nodejs
+
+# Expose port
+EXPOSE 4500
 
 USER nodejs
 
