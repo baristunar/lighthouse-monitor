@@ -5,10 +5,14 @@ import { Url } from "./lighthouse.types.js";
 
 export const runLighthouse = async (url: Url) => {
   const outputFile = path.join(process.cwd(), `lh-report-${Date.now()}.json`);
+  
+  // Use 'lighthouse' in production (Docker with global install), 'npx lighthouse' locally
+  const lighthouseCmd = process.env.NODE_ENV === 'production' ? 'lighthouse' : 'npx lighthouse';
+  const chromeFlags = "--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --disable-extensions";
 
   return new Promise((resolve, reject) => {
     exec(
-      `lighthouse ${url} --output=json --output-path=${outputFile} --quiet --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --disable-extensions"`,
+      `${lighthouseCmd} ${url} --output=json --output-path=${outputFile} --quiet --chrome-flags="${chromeFlags}"`,
       (err) => {
         if (err) {
           if (fs.existsSync(outputFile)) {
