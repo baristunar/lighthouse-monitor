@@ -4,7 +4,14 @@ FROM node:22-slim
 # Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
     chromium \
+    chromium-sandbox \
     fonts-liberation \
+    fonts-ipafont-gothic \
+    fonts-wqy-zenhei \
+    fonts-thai-tlwg \
+    fonts-kacst \
+    fonts-freefont-ttf \
+    libappindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -15,16 +22,19 @@ RUN apt-get update && apt-get install -y \
     libgtk-3-0 \
     libnspr4 \
     libnss3 \
+    libx11-xcb1 \
     libxcomposite1 \
     libxdamage1 \
     libxfixes3 \
     libxkbcommon0 \
     libxrandr2 \
     xdg-utils \
+    ca-certificates \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Chromium path for Lighthouse
+# Set Chromium environment variables
+ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROME_PATH=/usr/bin/chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
@@ -36,16 +46,25 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production && npm cache clean --force
 
 # Copy app source
 COPY . .
 
 # Build TypeScript
-RUN npm run build
+RUN npm install --save-dev typescript @types/node && \
+    npm run build && \
+    npm prune --production
 
 # Expose port
 EXPOSE 4500
 
+# Run as non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nodejs && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
 # Start app
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]
