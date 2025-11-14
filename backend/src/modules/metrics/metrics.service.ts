@@ -8,12 +8,12 @@ export class MetricsService {
   async runOnce(domain: Domain) {
     const data = await runLighthouse(domain);
 
-    await this.repo.saveMetrics(data as MetricsData);
+    await this.repo.create(data as MetricsData);
     
     return data;
   }
 
   getHistory(domain: Domain) {
-    return this.repo.getByDomain(domain);
+    return this.repo.findByDomain(domain);
   }
 }
