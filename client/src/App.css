@@ -222,6 +222,12 @@ button:disabled {
   flex: 1;
 }
 
+.domain-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.visit-btn,
 .copy-btn {
   padding: 0.5rem 0.8rem;
   background-color: var(--bg);
@@ -229,6 +235,11 @@ button:disabled {
   font-size: 1.2rem;
   min-width: auto;
   transition: all 0.2s;
+}
+
+.visit-btn:hover {
+  background-color: var(--success);
+  transform: scale(1.1);
 }
 
 .copy-btn:hover {
