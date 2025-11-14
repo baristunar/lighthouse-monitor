@@ -58,8 +58,8 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
-# Remove dev dependencies to reduce image size
-RUN npm ci --omit=dev && npm cache clean --force
+# Clean node_modules and reinstall only production dependencies
+RUN rm -rf node_modules && npm ci --omit=dev && npm cache clean --force
 
 # Run as non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
