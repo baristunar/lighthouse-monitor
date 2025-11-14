@@ -68,6 +68,20 @@ export default function MetricsView() {
     <div className="metrics-section">
       <h2>📊 Performance Reports</h2>
       
+      <div className="info-notice" style={{ 
+        backgroundColor: '#d1ecf1', 
+        border: '1px solid #bee5eb', 
+        padding: '12px 16px', 
+        borderRadius: '6px', 
+        marginBottom: '20px',
+        fontSize: '14px',
+        color: '#0c5460'
+      }}>
+        ℹ️ <strong>Important:</strong> Tests are performed from a free-tier cloud server. 
+        Performance scores may be affected by server limitations and network latency, 
+        not reflecting actual user experience from all locations.
+      </div>
+      
       {domains.length === 0 ? (
         <p className="no-data">No domains added yet. Please add a domain first.</p>
       ) : (

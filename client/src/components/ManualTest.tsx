@@ -61,6 +61,18 @@ export default function ManualTest({ onTestComplete }: ManualTestProps) {
   return (
     <div className="manual-test-section">
       <h2>⚡ Manual Test</h2>
+      <div className="info-notice" style={{ 
+        backgroundColor: '#fff3cd', 
+        border: '1px solid #ffc107', 
+        padding: '12px 16px', 
+        borderRadius: '6px', 
+        marginBottom: '20px',
+        fontSize: '14px',
+        color: '#856404'
+      }}>
+        ℹ️ <strong>Note:</strong> Tests run on a free-tier server with limited resources. 
+        Scores may be lower than actual site performance due to server constraints, not your website.
+      </div>
       <form onSubmit={handleSubmit} className="test-form">
         <CustomSelect
           label="Select Domain:"
