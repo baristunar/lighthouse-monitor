@@ -6,21 +6,9 @@ import { Url } from "./lighthouse.types.js";
 export const runLighthouse = async (url: Url) => {
   const outputFile = path.join(process.cwd(), `lh-report-${Date.now()}.json`);
 
-  // Chrome flags for Docker/containerized environments
-  const chromeFlags = [
-    '--headless',
-    '--no-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--disable-software-rasterizer',
-    '--disable-extensions'
-  ].join(' ');
-
-  const lighthouseCommand = `npx lighthouse ${url} --output=json --output-path=${outputFile} --quiet --chrome-flags="${chromeFlags}"`;
-
   return new Promise((resolve, reject) => {
     exec(
-      lighthouseCommand,
+      `lighthouse ${url} --output=json --output-path=${outputFile} --quiet --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer --disable-extensions"`,
       (err) => {
         if (err) {
           if (fs.existsSync(outputFile)) {

@@ -48,6 +48,9 @@ COPY package*.json ./
 # Install all dependencies (needed for build)
 RUN npm ci && npm cache clean --force
 
+# Install lighthouse globally to avoid npx issues
+RUN npm install -g lighthouse
+
 # Copy app source
 COPY . .
 
@@ -60,8 +63,9 @@ EXPOSE 4500
 
 # Run as non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nodejs && \
-    chown -R nodejs:nodejs /app
+    adduser --system --uid 1001 --home /home/nodejs nodejs && \
+    mkdir -p /home/nodejs && \
+    chown -R nodejs:nodejs /app /home/nodejs
 
 USER nodejs
 
