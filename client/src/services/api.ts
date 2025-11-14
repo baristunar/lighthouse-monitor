@@ -17,6 +17,6 @@ export const domainApi = {
 };
 
 export const metricsApi = {
-  getByDomain: (domain: string) => api.get<Metric[]>(`/metrics/${encodeURIComponent(domain)}`),
-  runTest: (domain: string) => api.post<Metric>('/metrics/run', { domain }),
+  getByDomainId: (domainId: string) => api.get<Metric[]>(`/metrics/${domainId}`),
+  runTest: (domainId: string) => api.post<Metric>('/metrics/run', { domainId }),
 };

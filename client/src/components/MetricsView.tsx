@@ -7,7 +7,7 @@ import type { Domain, Metric } from '../types';
 
 export default function MetricsView() {
   const [domains, setDomains] = useState<Domain[]>([]);
-  const [selectedDomain, setSelectedDomain] = useState('');
+  const [selectedDomainId, setSelectedDomainId] = useState('');
   const [metrics, setMetrics] = useState<Metric[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
@@ -17,27 +17,27 @@ export default function MetricsView() {
   }, []);
 
   useEffect(() => {
-    if (selectedDomain) {
-      loadMetrics(selectedDomain);
+    if (selectedDomainId) {
+      loadMetrics(selectedDomainId);
     }
-  }, [selectedDomain]);
+  }, [selectedDomainId]);
 
   const loadDomains = async () => {
     try {
       const response = await domainApi.getAll();
       setDomains(response.data);
-      if (response.data.length > 0 && !selectedDomain) {
-        setSelectedDomain(response.data[0].url);
+      if (response.data.length > 0 && !selectedDomainId) {
+        setSelectedDomainId(response.data[0]._id);
       }
     } catch (error) {
       console.error('Failed to load domains:', error);
     }
   };
 
-  const loadMetrics = async (domain: string) => {
+  const loadMetrics = async (domainId: string) => {
     setLoading(true);
     try {
-      const response = await metricsApi.getByDomain(domain);
+      const response = await metricsApi.getByDomainId(domainId);
       setMetrics(response.data);
     } catch (error) {
       console.error('Failed to load metrics:', error);
@@ -75,8 +75,8 @@ export default function MetricsView() {
           <div className="domain-selector">
             <CustomSelect
               label="Select Domain:"
-              value={selectedDomain}
-              onChange={setSelectedDomain}
+              value={selectedDomainId}
+              onChange={setSelectedDomainId}
               options={domainOptions}
             />
           </div>
@@ -87,7 +87,7 @@ export default function MetricsView() {
             </div>
           )}
 
-          {!loading && metrics.length === 0 && selectedDomain && (
+          {!loading && metrics.length === 0 && selectedDomainId && (
             <p className="no-data">No metrics available for this domain yet. Run a manual test or wait for the cron job.</p>
           )}
 

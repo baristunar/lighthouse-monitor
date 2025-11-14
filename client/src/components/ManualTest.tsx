@@ -1,25 +1,49 @@
-import { useState } from 'react';
-import { metricsApi } from '../services/api';
-import type { Metric } from '../types';
+import { useState, useEffect } from 'react';
+import { domainApi, metricsApi } from '../services/api';
+import CustomSelect from './CustomSelect';
+import type { Domain, Metric } from '../types';
 
 interface ManualTestProps {
   onTestComplete: () => void;
 }
 
 export default function ManualTest({ onTestComplete }: ManualTestProps) {
-  const [domain, setDomain] = useState('');
+  const [domains, setDomains] = useState<Domain[]>([]);
+  const [selectedDomainId, setSelectedDomainId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<Metric | null>(null);
 
+  useEffect(() => {
+    loadDomains();
+  }, []);
+
+  const loadDomains = async () => {
+    try {
+      const response = await domainApi.getAll();
+      setDomains(response.data);
+      if (response.data.length > 0) {
+        setSelectedDomainId(response.data[0]._id);
+      }
+    } catch (error) {
+      console.error('Failed to load domains:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!selectedDomainId) {
+      setError('Please select a domain');
+      return;
+    }
+    
     setError('');
     setResult(null);
     setLoading(true);
 
     try {
-      const response = await metricsApi.runTest(domain);
+      const response = await metricsApi.runTest(selectedDomainId);
       setResult(response.data);
       onTestComplete();
     } catch (err) {
@@ -29,19 +53,22 @@ export default function ManualTest({ onTestComplete }: ManualTestProps) {
     }
   };
 
+  const domainOptions = domains.map(d => ({
+    value: d._id,
+    label: d.url
+  }));
+
   return (
     <div className="manual-test-section">
       <h2>⚡ Manual Test</h2>
       <form onSubmit={handleSubmit} className="test-form">
-        <input
-          type="url"
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
-          placeholder="https://example.com"
-          required
-          disabled={loading}
+        <CustomSelect
+          label="Select Domain:"
+          value={selectedDomainId}
+          onChange={setSelectedDomainId}
+          options={domainOptions}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading || !selectedDomainId}>
           {loading ? 'Running Test...' : 'Run Test'}
         </button>
       </form>
