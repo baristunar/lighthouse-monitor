@@ -37,15 +37,14 @@ RUN apt-get update && apt-get install -y \
 ENV CHROME_BIN=/usr/bin/chromium \
     CHROME_PATH=/usr/bin/chromium \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
-    NODE_ENV=production
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies and lighthouse
+# Install ALL dependencies (including devDependencies for build)
 RUN npm ci && \
     npm install -g lighthouse && \
     npm cache clean --force
@@ -55,6 +54,9 @@ COPY . .
 
 # Build application
 RUN npm run build
+
+# Now set production mode
+ENV NODE_ENV=production
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
