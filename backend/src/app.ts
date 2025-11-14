@@ -1,10 +1,15 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import metricsRouter from './modules/metrics/metrics.controller'
+import domainRouter from "./modules/domains/domain.controller";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/v1/domains", domainRouter);
+app.use("/api/v1/metrics", metricsRouter);
 
 app.get("/health", (req: Request, res: Response) => {
     res.status(200).send("OK");
